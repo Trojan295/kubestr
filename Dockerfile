@@ -3,8 +3,7 @@ FROM golang:alpine3.12 AS builder
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux \
-    GOARCH=amd64 \
-    GOBIN=/dist
+    GOARCH=$TARGETPLATFORM
 
 WORKDIR /app
 
@@ -15,7 +14,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go get -ldflags="-w -s" .
+RUN go build -o /dist/kubestr -ldflags="-w -s" .
 
 FROM alpine:3.12
 
